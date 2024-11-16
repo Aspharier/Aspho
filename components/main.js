@@ -5,20 +5,137 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import Home from "./home";
-import React, { cloneElement, useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Sudoku = ({ navigation }) => {
-  const [grid, setGrid] = useState(
-    Array(9)
+  const generateRandomSudoku = () => {
+    // Helper functions
+    const isValid = (grid, row, col, num) => {
+      // Check row
+      if (grid[row].includes(num)) return false;
+
+      // Check column
+      for (let i = 0; i < 9; i++) {
+        if (grid[i][col] === num) return false;
+      }
+
+      // Check 3x3 subgrid
+      const startRow = Math.floor(row / 3) * 3;
+      const startCol = Math.floor(col / 3) * 3;
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (grid[startRow + i][startCol + j] === num) return false;
+        }
+      }
+
+      return true;
+    };
+
+    const fillGrid = (grid) => {
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+          if (grid[row][col] === "") {
+            const nums = Array.from({ length: 9 }, (_, i) => i + 1).sort(
+              () => Math.random() - 0.5
+            ); // Randomize numbers 1-9
+            for (let num of nums) {
+              if (isValid(grid, row, col, num)) {
+                grid[row][col] = num;
+                if (fillGrid(grid)) return true;
+                grid[row][col] = ""; // Backtrack
+              }
+            }
+            return false; // If no valid number is found
+          }
+        }
+      }
+      return true;
+    };
+
+    const removeCells = (grid, count) => {
+      const newGrid = grid.map((row) => [...row]);
+      while (count > 0) {
+        const row = Math.floor(Math.random() * 9);
+        const col = Math.floor(Math.random() * 9);
+        if (newGrid[row][col] !== "") {
+          newGrid[row][col] = ""; // Clear cell
+          count--;
+        }
+      }
+      return newGrid;
+    };
+
+    // Generate a full grid
+    const fullGrid = Array(9)
       .fill()
-      .map(() => Array(9).fill(""))
-  );
+      .map(() => Array(9).fill(""));
+    fillGrid(fullGrid);
+
+    // Remove random cells for puzzle generation
+    return removeCells(fullGrid, 40); // Remove 40 cells (adjust for difficulty)
+  };
+
+  const [grid, setGrid] = useState([]);
+  const [originalGrid, setOriginalGrid] = useState([]);
+
+  useEffect(() => {
+    const newGrid = generateRandomSudoku();
+    setGrid(newGrid);
+    setOriginalGrid(newGrid.map((row) => [...row])); // Save the initial grid for reset
+  }, []);
 
   const handleInputChange = (row, col, value) => {
     const newGrid = [...grid];
-    newGrid[row][col] = value;
-    setGrid(newGrid);
+    if (originalGrid[row][col] === "") {
+      // Allow changes only for empty cells
+      newGrid[row][col] = value;
+      setGrid(newGrid);
+    }
+  };
+
+  const checkSudoku = () => {
+    const isValid = (grid) => {
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+          const num = parseInt(grid[row][col], 10);
+          if (isNaN(num) || !isValidNum(grid, row, col, num)) return false;
+        }
+      }
+      return true;
+    };
+
+    const isValidNum = (grid, row, col, num) => {
+      // Check row
+      for (let i = 0; i < 9; i++) {
+        if (i !== col && grid[row][i] == num) return false;
+      }
+
+      // Check column
+      for (let i = 0; i < 9; i++) {
+        if (i !== row && grid[i][col] == num) return false;
+      }
+
+      // Check 3x3 subgrid
+      const startRow = Math.floor(row / 3) * 3;
+      const startCol = Math.floor(col / 3) * 3;
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (
+            (startRow + i !== row || startCol + j !== col) &&
+            grid[startRow + i][startCol + j] == num
+          )
+            return false;
+        }
+      }
+
+      return true;
+    };
+
+    if (isValid(grid)) {
+      alert("Congratulations! The Sudoku is correct!");
+    } else {
+      alert("The Sudoku solution is incorrect. Keep trying!");
+    }
   };
 
   return (
@@ -32,14 +149,17 @@ const Sudoku = ({ navigation }) => {
                 style={[
                   styles.cell,
                   {
-                    borderRightWidth: colIndex % 3 == 2 ? 2 : 1,
-                    borderBottomWidth: rowIndex % 3 == 2 ? 2 : 1,
-                    backgroundColor: cell === 1 ? "" : "white",
+                    borderRightWidth: colIndex % 3 === 2 ? 2 : 1,
+                    borderBottomWidth: rowIndex % 3 === 2 ? 2 : 1,
+                    backgroundColor:
+                      originalGrid[rowIndex][colIndex] !== "" ? "" : "white",
+                    fontWeight: "bold",
                   },
                 ]}
                 keyboardType="numeric"
                 maxLength={1}
-                value={cell}
+                editable={originalGrid[rowIndex][colIndex] === ""}
+                value={cell !== "" ? cell.toString() : ""}
                 onChangeText={(text) =>
                   handleInputChange(rowIndex, colIndex, text)
                 }
@@ -48,18 +168,27 @@ const Sudoku = ({ navigation }) => {
           </View>
         ))}
       </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => alert("Check Sudoku!")}
-      >
-        <Text style={styles.buttonText}>CHECK</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("Home")}
-      >
-        <Text style={styles.buttonText}>RESET</Text>
-      </TouchableOpacity>
+      <View style = {styles.buttonRow}>
+        <TouchableOpacity style={styles.button} onPress={checkSudoku}>
+          <Text style={styles.buttonText}>CHECK</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            const newGrid = generateRandomSudoku();
+            setGrid(newGrid);
+            setOriginalGrid(newGrid.map((row) => [...row]));
+          }}
+        >
+          <Text style={styles.buttonText}>RESET</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Home")}
+        >
+          <Text style={styles.buttonText}>HOME</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -89,10 +218,10 @@ const styles = StyleSheet.create({
     borderColor: "#BA181B",
     borderWidth: 1,
     margin: 0,
-    backgroundColor: "white",
   },
   button: {
-    marginTop : 20,
+    flex : 1,
+    marginHorizontal : 5,
     padding: 20,
     borderRadius: 15,
     justifyContent: "center",
@@ -105,6 +234,12 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "#0B090A",
   },
+  buttonRow : {
+    flexDirection : "row",
+    marginTop : 50,
+    justifyContent : "space-between",
+    width : "94%"
+  },  
 });
 
 export default Sudoku;
