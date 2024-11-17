@@ -9,17 +9,13 @@ import React, { useState, useEffect } from "react";
 
 const Sudoku = ({ navigation }) => {
   const generateRandomSudoku = () => {
-    // Helper functions
     const isValid = (grid, row, col, num) => {
-      // Check row
       if (grid[row].includes(num)) return false;
 
-      // Check column
       for (let i = 0; i < 9; i++) {
         if (grid[i][col] === num) return false;
       }
 
-      // Check 3x3 subgrid
       const startRow = Math.floor(row / 3) * 3;
       const startCol = Math.floor(col / 3) * 3;
       for (let i = 0; i < 3; i++) {
@@ -37,15 +33,15 @@ const Sudoku = ({ navigation }) => {
           if (grid[row][col] === "") {
             const nums = Array.from({ length: 9 }, (_, i) => i + 1).sort(
               () => Math.random() - 0.5
-            ); // Randomize numbers 1-9
+            );
             for (let num of nums) {
               if (isValid(grid, row, col, num)) {
                 grid[row][col] = num;
                 if (fillGrid(grid)) return true;
-                grid[row][col] = ""; // Backtrack
+                grid[row][col] = "";
               }
             }
-            return false; // If no valid number is found
+            return false;
           }
         }
       }
@@ -58,21 +54,19 @@ const Sudoku = ({ navigation }) => {
         const row = Math.floor(Math.random() * 9);
         const col = Math.floor(Math.random() * 9);
         if (newGrid[row][col] !== "") {
-          newGrid[row][col] = ""; // Clear cell
+          newGrid[row][col] = "";
           count--;
         }
       }
       return newGrid;
     };
 
-    // Generate a full grid
     const fullGrid = Array(9)
       .fill()
       .map(() => Array(9).fill(""));
     fillGrid(fullGrid);
 
-    // Remove random cells for puzzle generation
-    return removeCells(fullGrid, 40); // Remove 40 cells (adjust for difficulty)
+    return removeCells(fullGrid, 40); 
   };
 
   const [grid, setGrid] = useState([]);
@@ -81,13 +75,12 @@ const Sudoku = ({ navigation }) => {
   useEffect(() => {
     const newGrid = generateRandomSudoku();
     setGrid(newGrid);
-    setOriginalGrid(newGrid.map((row) => [...row])); // Save the initial grid for reset
+    setOriginalGrid(newGrid.map((row) => [...row]));
   }, []);
 
   const handleInputChange = (row, col, value) => {
     const newGrid = [...grid];
     if (originalGrid[row][col] === "") {
-      // Allow changes only for empty cells
       newGrid[row][col] = value;
       setGrid(newGrid);
     }
@@ -105,17 +98,17 @@ const Sudoku = ({ navigation }) => {
     };
 
     const isValidNum = (grid, row, col, num) => {
-      // Check row
+      // for row checking
       for (let i = 0; i < 9; i++) {
         if (i !== col && grid[row][i] == num) return false;
       }
 
-      // Check column
+      // for column checking
       for (let i = 0; i < 9; i++) {
         if (i !== row && grid[i][col] == num) return false;
       }
 
-      // Check 3x3 subgrid
+      // for 3x3 cube checking
       const startRow = Math.floor(row / 3) * 3;
       const startCol = Math.floor(col / 3) * 3;
       for (let i = 0; i < 3; i++) {

@@ -1,20 +1,41 @@
-import { Text,View, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import React from "react";
 
 const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
+      <View style={styles.headLineContainer}>
+        <Text style={styles.headLine}>Dare</Text>
+        <Text style={styles.headLine}>TO</Text>
+        <Text style={styles.headLine}>Begin</Text>
+      </View>
+      <View style = {styles.emptySpace}>
+
+      </View>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate("Sudoku")}
       >
-        <Text style={styles.buttonText}>START</Text>
+        <Text style={styles.buttonText}>PLAY</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  emptySpace : {
+    margin : 80
+  },  
+  headLineContainer: {
+    flex: 0,
+    flexDirection: "column",
+  },
+  headLine: {
+    letterSpacing: 2,
+    color: "#F5F3F4",
+    fontSize: 100,
+    fontWeight: "bold",
+  },
   container: {
     alignItems: "center",
     flex: 1,
