@@ -2,46 +2,69 @@ import { Text, View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import React from "react";
 
 const Home = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <View style={styles.headLineContainer}>
-        <Text style={styles.headLine}>Dare</Text>
-        <Text style={styles.headLine}>TO</Text>
-        <Text style={styles.headLine}>Begin</Text>
-      </View>
-      <View style = {styles.emptySpace}>
+  const handleCardPress = (cardFunction) => {
+    cardFunction();
+  };
 
+  const cardFunction = {
+    cardSudo: () => navigation.navigate("Sudoku"),
+    cardTic: () => navigation.navigate("TicTacToe"),
+  };
+
+  return (
+    <View style={styles.bigContainer}>
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.cardSudo}
+          onPress={() => handleCardPress(cardFunction.cardSudo)}
+        >
+          <Text style={styles.cardText}>SudO</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("Sudoku")}
-      >
-        <Text style={styles.buttonText}>PLAY</Text>
-      </TouchableOpacity>
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.cardSudo}
+          onPress={() => handleCardPress(cardFunction.cardTic)}
+        >
+          <Text style={styles.cardText}>TicTacToe</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  emptySpace : {
-    margin : 80
-  },  
-  headLineContainer: {
-    flex: 0,
-    flexDirection: "column",
+  bigContainer: {
+    flex: 1,
+    backgroundColor: "#BA181B",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
   },
-  headLine: {
-    letterSpacing: 2,
-    color: "#F5F3F4",
-    fontSize: 100,
+  cardSudo: {
+    width: "200",
+    height: "200",
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    margin: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cardText: {
+    color: "black",
+    fontSize: 18,
     fontWeight: "bold",
   },
   container: {
     alignItems: "center",
-    flex: 1,
     alignContent: "center",
     justifyContent: "center",
-    backgroundColor: "#BA181B",
   },
   button: {
     width: 150,
