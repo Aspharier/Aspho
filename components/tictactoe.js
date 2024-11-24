@@ -168,6 +168,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#F5F3F4",
+    elevation: 30,
+    shadowColor: "black",
+    shadowOffset: { width: 1, height: 5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
   },
   buttonText: {
     fontWeight: "bold",

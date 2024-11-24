@@ -9,6 +9,7 @@ const Home = ({ navigation }) => {
   const cardFunction = {
     cardSudo: () => navigation.navigate("Sudoku"),
     cardTic: () => navigation.navigate("TicTacToe"),
+    cardMusic: () => navigation.navigate("Music"),
   };
 
   return (
@@ -29,6 +30,14 @@ const Home = ({ navigation }) => {
           <Text style={styles.cardText}>TicTacToe</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.cardSudo}
+          onPress={() => handleCardPress(cardFunction.cardMusic)}
+        >
+          <Text style={styles.cardText}>JAM</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -39,7 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#BA181B",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row",
+    flexDirection: "column",
   },
   cardSudo: {
     width: "200",
@@ -55,6 +64,11 @@ const styles = StyleSheet.create({
     margin: 20,
     alignItems: "center",
     justifyContent: "center",
+    elevation: 30,
+    shadowColor: "black",
+    shadowOffset: { width: 1, height: 5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
   },
   cardText: {
     color: "black",
