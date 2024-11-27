@@ -9,7 +9,7 @@ const Home = ({ navigation }) => {
   const cardFunction = {
     cardSudo: () => navigation.navigate("Sudoku"),
     cardTic: () => navigation.navigate("TicTacToe"),
-    cardMusic: () => navigation.navigate("Music"),
+    cardMusic: () => navigation.navigate("AppNavigator"),
   };
 
   return (

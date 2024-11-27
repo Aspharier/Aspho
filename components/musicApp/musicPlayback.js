@@ -1,74 +1,24 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet,StatusBar } from "react-native";
 import React from "react";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Slider from "@react-native-community/slider";
 
 const MusicPlayback = ({ navigation }) => {
+
   return (
     <View style={styles.wrapper}>
-      <View style={styles.cardContainer}>
-        <View style={styles.albumArtContainer}>
-          <Image
-            source={require("../../assets/albumCover.jpg")}
-            style={styles.albumArt}
-          />
-        </View>
+            <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-        <View style={styles.songInfo}>
-          <Text style={styles.songTitle}>SONG TITLE</Text>
-          <Text style={styles.artisName}>ARTIST NAME</Text>
-        </View>
-
-        <View style={styles.controlContainer}>
-          <TouchableOpacity>
-            <MaterialCommunityIcons
-              name="skip-previous"
-              size={40}
-              color="#0B090A"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <MaterialCommunityIcons name="pause" size={50} color="#0B090A" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <MaterialCommunityIcons
-              name="skip-next"
-              size={40}
-              color="#0B090A"
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.sliderContainer}>
-          <Slider
-            style={styles.slider}
-            minimumValue={0}
-            maximumValue={1}
-            minimumTrackTintColor="#BA181B"
-            maximumTrackTintColor="#E5E5E5"
-            thumbTintColor="#BA181B"
-          />
-          <View style={styles.timeContainer}>
-            <Text style={styles.timeText}>0:00</Text>
-            <Text style={styles.timeText}>3:45</Text>
-          </View>
-        </View>
-      </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("Music")}
-      >
-        <Text style={styles.buttonText}>BACK</Text>
-      </TouchableOpacity>
+      <Text>PLAYER</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-    wrapper: {
-        flex: 1,
+  wrapper: {
+    flex: 1,
     justifyContent: "center",
-    backgroundColor: "#BA181B",
-    },
+    backgroundColor: "white",
+    alignItems: "center",
+  },
   cardContainer: {
     position: "relative",
     bottom: 20,
@@ -88,32 +38,29 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   albumArt: {
-    width: 200,
-    height: 200,
-    borderRadius: 10,
-    backgroundColor: "#E5E5E5",
+    width: 300,
+    height: 300,
+    borderRadius: 15,
   },
   songInfo: {
     alignItems: "center",
-    marginBottom: 10,
   },
   songTitle: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
     color: "#0B090A",
   },
-  artisName: {
-    fontSize: 14,
-    color: "#6C757D",
+  artistName: {
+    fontSize: 16,
+    color: "#0B090A",
   },
   controlContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
+    justifyContent: "center",
+    marginVertical: 15,
   },
   sliderContainer: {
-    marginTop: 10,
+    marginTop: 20,
   },
   slider: {
     width: "100%",
@@ -122,17 +69,19 @@ const styles = StyleSheet.create({
   timeContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: -10,
+    paddingHorizontal: 10,
   },
   timeText: {
     fontSize: 12,
-    color: "#6C757D",
+    color: "#0B090A",
   },
   button: {
-    alignSelf: "center",
-    width: "90%",
-    padding: 15,
-    borderRadius: 20,
+    borderColor: "black",
+    borderWidth: 1,
+    paddingVertical: 15,
+    paddingHorizontal: 16,
+    borderRadius: 15,
+    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#F5F3F4",
     elevation: 30,
@@ -143,10 +92,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: "bold",
-    letterSpacing: 4,
-    fontSize: 30,
+    letterSpacing: 2,
+    fontSize: 20,
     color: "#0B090A",
-    textAlign: "center",
   },
 });
 
