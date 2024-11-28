@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 
@@ -132,7 +133,7 @@ const Sudoku = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.gridContainer}>
         {grid.map((row, rowIndex) => (
           <View style={styles.row} key={rowIndex}>
@@ -182,7 +183,7 @@ const Sudoku = ({ navigation }) => {
           <Text style={styles.buttonText}>HOME</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

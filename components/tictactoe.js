@@ -6,6 +6,7 @@ import {
   TextInput,
   Dimensions,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import Home from "./home";
@@ -96,7 +97,7 @@ const TicTacToe = ({ navigation }) => {
   const winner = calculateWinner(squares);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Board squares={squares} onSquarePress={onSquarePress} />
 
       {winner && (
@@ -123,7 +124,7 @@ const TicTacToe = ({ navigation }) => {
           <Text style={styles.buttonText}>HOME</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 

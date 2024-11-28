@@ -1,14 +1,13 @@
-import { View, Text, StyleSheet,StatusBar } from "react-native";
+import { Text, StyleSheet, StatusBar, ScrollView } from "react-native";
 import React from "react";
 
 const MusicPlayback = ({ navigation }) => {
-
   return (
-    <View style={styles.wrapper}>
-            <StatusBar barStyle="dark-content" backgroundColor="white" />
+    <ScrollView contentContainerStyle={styles.wrapper}>
+      <StatusBar barStyle="dark-content" backgroundColor="white" />
 
       <Text>PLAYER</Text>
-    </View>
+    </ScrollView>
   );
 };
 

@@ -1,13 +1,13 @@
-import { View, Text, StyleSheet, StatusBar } from "react-native";
+import { View, Text, StyleSheet, StatusBar, ScrollView } from "react-native";
 import React from "react";
 
 const PlayList = () => {
   return (
-    <View style={styles.wrapper}>
+    <ScrollView contentContainerStyle={styles.wrapper}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
 
       <Text>PLAY LIST</Text>
-    </View>
+    </ScrollView>
   );
 };
 

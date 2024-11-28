@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import React from "react";
 
 const Home = ({ navigation }) => {
@@ -13,7 +13,7 @@ const Home = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.bigContainer}>
+    <ScrollView contentContainerStyle={styles.bigContainer}>
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.cardSudo}
@@ -38,7 +38,7 @@ const Home = ({ navigation }) => {
           <Text style={styles.cardText}>JAM</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
