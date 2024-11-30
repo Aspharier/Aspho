@@ -12,7 +12,15 @@ export class AudioProvider extends Component {
       audioFiles: [],
       permissionError: false,
       dataProvider: new DataProvider((r1, r2) => r1 !== r2),
+      playbackObj: null,
+      soundObj: null,
+      currentAudio: {},
+      isPlaying: false,
+      currentAudioIndex: null,
+      playbackPosition: null,
+      playbackDuration: null,
     };
+    this.totalAudioCount = 0;
   }
 
   permissionAlert = () => {
@@ -37,9 +45,13 @@ export class AudioProvider extends Component {
       mediaType: "audio",
       first: media.totalCount,
     });
+    this.totalAudioCount = media.totalCount;
     this.setState({
       ...this.state,
-      dataProvider: dataProvider.cloneWithRows([...audioFiles, ...media.assets]),
+      dataProvider: dataProvider.cloneWithRows([
+        ...audioFiles,
+        ...media.assets,
+      ]),
       audioFiles: [...audioFiles, ...media.assets],
     });
   };
@@ -79,8 +91,24 @@ export class AudioProvider extends Component {
   componentDidMount() {
     this.getPermission();
   }
+
+  updateState = (prevState, newState = {}) => {
+    this.setState({ ...prevState, ...newState });
+  };
+
   render() {
-    const {audioFiles, dataProvider, permissionError} = this.state
+    const {
+      audioFiles,
+      dataProvider,
+      permissionError,
+      playbackObj,
+      soundObj,
+      currentAudio,
+      isPlaying,
+      currentAudioIndex,
+      playbackPosition,
+      playbackDuration,
+    } = this.state;
     if (permissionError)
       return (
         <View
@@ -96,7 +124,21 @@ export class AudioProvider extends Component {
         </View>
       );
     return (
-      <AudioContext.Provider value={{ audioFiles, dataProvider}}>
+      <AudioContext.Provider
+        value={{
+          audioFiles,
+          dataProvider,
+          playbackObj,
+          soundObj,
+          currentAudio,
+          isPlaying,
+          currentAudioIndex,
+          totalAudioCount: this.totalAudioCount,
+          playbackPosition,
+          playbackDuration,
+          updateState: this.updateState,
+        }}
+      >
         {this.props.children}
       </AudioContext.Provider>
     );

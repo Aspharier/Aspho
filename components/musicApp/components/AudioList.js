@@ -1,7 +1,15 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableWithoutFeedback,
+} from "react-native";
 import React from "react";
 import Entypo from "@expo/vector-icons/Entypo";
 import color from "../misc/color";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 const getThubnailText = (filename) => filename[0];
 
@@ -28,29 +36,47 @@ const convertTime = (minutes) => {
   }
 };
 
-export default function AudioList({ title, duration, onOptionPress }) {
+const renderPlayPauseIcon = (isPlaying) => {
+  if (isPlaying) return <FontAwesome6 name="pause" size={30} color={color.ACTIVE_FONT} />
+  return <FontAwesome6 name="play" size={30} color={color.ACTIVE_FONT} />;
+};
+
+export default function AudioList({
+  title,
+  duration,
+  onOptionPress,
+  onAudioPress,
+  isPlaying,
+  activeListItem,
+}) {
   return (
     <>
       <View style={styles.wrapper}>
         <View style={styles.container}>
-          <View style={styles.leftContainer}>
-            <View style={styles.thumbnail}>
-              <Text style={styles.thumbnailText}>{getThubnailText(title)}</Text>
+          <TouchableWithoutFeedback onPress={onAudioPress}>
+            <View style={styles.leftContainer}>
+              <View style={[styles.thumbnail, {backgroundColor: activeListItem ? color.ACTIVE_BG : color.FONT_LIGHT}]}>
+                <Text style={styles.thumbnailText}>
+                  {activeListItem
+                    ? renderPlayPauseIcon(isPlaying)
+                    : getThubnailText(title)}
+                </Text>
+              </View>
+              <View style={styles.titleContainer}>
+                <Text numberOfLines={1} style={styles.title}>
+                  {title}
+                </Text>
+                <Text style={styles.timeText}>{convertTime(duration)}</Text>
+              </View>
             </View>
-            <View style={styles.titleContainer}>
-              <Text numberOfLines={1} style={styles.title}>
-                {title}
-              </Text>
-              <Text style={styles.timeText}>{convertTime(duration)}</Text>
-            </View>
-          </View>
+          </TouchableWithoutFeedback>
           <View style={styles.rightContainer}>
             <Entypo
               onPress={onOptionPress}
               name="dots-three-vertical"
               size={20}
               color={color.FONT_MEDIUM}
-              style={{ padding: 10}}
+              style={{ padding: 10 }}
             />
           </View>
         </View>
@@ -68,7 +94,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignSelf: "center",
-    width: width - 80,
+    width: width - 60,
     backgroundColor: "white",
   },
   leftContainer: {
