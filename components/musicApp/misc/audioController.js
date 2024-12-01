@@ -1,3 +1,4 @@
+import { Audio } from "expo-av";
 // play audio
 export const play = async (playbackObj, uri) => {
   try {
@@ -7,6 +8,7 @@ export const play = async (playbackObj, uri) => {
   }
 };
 // pause audio
+
 export const pause = async (playbackObj) => {
   try {
     return await playbackObj.setStatusAsync({
@@ -27,6 +29,7 @@ export const resume = async (playbackObj) => {
 };
 
 // select another audio
+
 export const playNext = async (playbackObj, uri) => {
   try {
     await playbackObj.stopAsync();

@@ -13,6 +13,7 @@
     "@expo-google-fonts/architects-daughter": "^0.2.3",
     "@expo-google-fonts/exo": "^0.2.3",
     "@expo/vector-icons": "^14.0.4",
+    "@react-native-async-storage/async-storage": "^2.1.0",
     "@react-native-community/cli": "latest",
     "@react-native-community/slider": "^4.5.5",
     "@react-navigation/bottom-tabs": "^7.0.12",
