@@ -1,37 +1,55 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
 import MusicPlayback from "../musicPlayback";
 import PlayList from "../playlist";
 import Home from "../../home";
 import Music from "../music";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import PlayListDetails from "../playListDetails";
+
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+const PlayListScreen = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="PlayList" component={PlayList} />
+      <Stack.Screen name="PlayListDetails" component={PlayListDetails} />
+    </Stack.Navigator>
+  );
+};
 
 const AppNavigator = () => {
   return (
     <Tab.Navigator
-    screenOptions={({ route }) => ({
-      headerShown: false,
-      tabBarStyle: {
-        ...styles.tabContainer,
-      },
-      animationEnabled: false,
-      tabBarActiveTintColor: "white",
-      tabBarInactiveTintColor: "black",
-      tabBarLabelStyle: {
-        fontSize: 12,
-      },
-    })}
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarStyle: {
+          ...styles.tabContainer,
+        },
+        animationEnabled: false,
+        tabBarActiveTintColor: "white",
+        tabBarInactiveTintColor: "black",
+        tabBarLabelStyle: {
+          fontSize: 12,
+        },
+      })}
     >
       <Tab.Screen
         name="AUDIO"
         component={Music}
         options={{
-          tabBarIcon: ({ focused,color, size }) => (
-            <Ionicons name={focused ? "headset" : "headset-outline"} size={size} color={color} />
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "headset" : "headset-outline"}
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -39,7 +57,7 @@ const AppNavigator = () => {
         name="PLAYER"
         component={MusicPlayback}
         options={{
-          tabBarIcon: ({ focused,color, size }) => (
+          tabBarIcon: ({ focused, color, size }) => (
             <MaterialCommunityIcons
               name={focused ? "record-circle" : "record-player"}
               size={size}
@@ -50,10 +68,14 @@ const AppNavigator = () => {
       />
       <Tab.Screen
         name="PLAYLIST"
-        component={PlayList}
+        component={PlayListScreen}
         options={{
-          tabBarIcon: ({ focused,color, size }) => (
-            <MaterialIcons name={focused ? "playlist-play" : "playlist-remove"} size={size} color={color} />
+          tabBarIcon: ({ focused, color, size }) => (
+            <MaterialIcons
+              name={focused ? "playlist-play" : "playlist-remove"}
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -77,7 +99,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingTop: 10,
     alignItems: "center",
-    backgroundColor: "#BA181B", 
+    backgroundColor: "#BA181B",
   },
 });
 

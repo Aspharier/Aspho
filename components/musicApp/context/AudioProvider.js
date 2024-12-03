@@ -5,7 +5,7 @@ import { DataProvider } from "recyclerlistview";
 import { Audio } from "expo-av";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { storeAudioForNextOpening } from "../misc/helper";
-import { playNext } from "../misc/audioController";
+import { play, playNext } from "../misc/audioController";
 
 export const AudioContext = createContext();
 
@@ -14,12 +14,16 @@ export class AudioProvider extends Component {
     super(props);
     this.state = {
       audioFiles: [],
+      playList: [],
+      addToPlayList: null,
       permissionError: false,
       dataProvider: new DataProvider((r1, r2) => r1 !== r2),
       playbackObj: null,
       soundObj: null,
       currentAudio: {},
       isPlaying: false,
+      isPlayListRunning: false,
+      activePlayList: [],
       currentAudioIndex: null,
       playbackPosition: null,
       playbackDuration: null,
@@ -109,14 +113,42 @@ export class AudioProvider extends Component {
     }
   };
 
-  onPlaybackStatusUpdate = async playbackStatus => {
+  onPlaybackStatusUpdate = async (playbackStatus) => {
     if (playbackStatus.isLoaded && playbackStatus.isPlaying) {
       this.updateState(this, {
         playbackPosition: playbackStatus.positionMillis,
         playbackDuration: playbackStatus.durationMillis,
       });
     }
+
+    if (playbackStatus.isLoaded && !playbackStatus.isPlaying) {
+      storeAudioForNextOpening(
+        this.state.currentAudio,
+        this.state.currentAudioIndex,
+        playbackStatus.positionMillis
+      );
+    }
+
     if (playbackStatus.didJustFinish) {
+      if (this.state.isPlayListRunning) {
+        let audio;
+        const indexOnPlayList = this.state.activePlayList.audios.findIndex(
+          ({ id }) => id === this.state.currentAudio.id
+        );
+        const nextIndex = indexOnPlayList + 1;
+        audio = this.state.activePlayList.audios[nextIndex];
+        if (!audio) audio = this.state.activePlayList.audios[0];
+        const status = await playNext(this.state.playbackObj, audio.uri);
+        const indexOnAllList = this.state.audioFiles.findIndex(
+          ({ id }) => id === audio.id
+        );
+        return this.updateState(this, {
+          soundObj: status,
+          isPlaying: true,
+          currentAudio: audio,
+          currentAudioIndex: indexOnAllList,
+        });
+      }
       const nextAudioIndex = this.state.currentAudioIndex + 1;
 
       // there is no next audio to play or if the current audio is last one
@@ -133,10 +165,10 @@ export class AudioProvider extends Component {
         return await storeAudioForNextOpening(this.state.audioFiles[0], 0);
       }
       // other wise we want to select the next audio
-      
-      const audio = this.state.audioFiles[audio, index];
+
+      const audio = this.state.audioFiles[(audio, index)];
       const status = await playNext(this.state.playbackObj, audio.uri);
-      
+
       this.updateState(this, {
         soundObj: status,
         currentAudio: audio,
@@ -161,6 +193,8 @@ export class AudioProvider extends Component {
   render() {
     const {
       audioFiles,
+      playList,
+      addToPlayList,
       dataProvider,
       permissionError,
       playbackObj,
@@ -170,6 +204,8 @@ export class AudioProvider extends Component {
       currentAudioIndex,
       playbackPosition,
       playbackDuration,
+      isPlayListRunning,
+      activePlayList,
     } = this.state;
     if (permissionError)
       return (
@@ -189,6 +225,8 @@ export class AudioProvider extends Component {
       <AudioContext.Provider
         value={{
           audioFiles,
+          playList,
+          addToPlayList,
           dataProvider,
           playbackObj,
           soundObj,
@@ -198,9 +236,11 @@ export class AudioProvider extends Component {
           totalAudioCount: this.totalAudioCount,
           playbackPosition,
           playbackDuration,
+          isPlayListRunning,
+          activePlayList,
           updateState: this.updateState,
           loadPreviousAudio: this.loadPreviousAudio,
-          onPlaybackStatusUpdate: this.onPlaybackStatusUpdate
+          onPlaybackStatusUpdate: this.onPlaybackStatusUpdate,
         }}
       >
         {this.props.children}

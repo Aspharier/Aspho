@@ -11,7 +11,10 @@ import color from "../misc/color";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
-const getThubnailText = (filename) => filename[0];
+//const getThubnailText = (filename) => filename[0];
+const getThubnailText = (filename) => {
+  return filename && filename.length > 0 ? filename[0] : "U";
+};
 
 const convertTime = (minutes) => {
   if (minutes) {
@@ -37,7 +40,8 @@ const convertTime = (minutes) => {
 };
 
 const renderPlayPauseIcon = (isPlaying) => {
-  if (isPlaying) return <FontAwesome6 name="pause" size={30} color={color.ACTIVE_FONT} />
+  if (isPlaying)
+    return <FontAwesome6 name="pause" size={30} color={color.ACTIVE_FONT} />;
   return <FontAwesome6 name="play" size={30} color={color.ACTIVE_FONT} />;
 };
 
@@ -48,14 +52,24 @@ export default function AudioList({
   onAudioPress,
   isPlaying,
   activeListItem,
+  style
 }) {
   return (
     <>
-      <View style={styles.wrapper}>
+      <View style={[styles.wrapper, style]}>
         <View style={styles.container}>
           <TouchableWithoutFeedback onPress={onAudioPress}>
             <View style={styles.leftContainer}>
-              <View style={[styles.thumbnail, {backgroundColor: activeListItem ? color.ACTIVE_BG : color.FONT_LIGHT}]}>
+              <View
+                style={[
+                  styles.thumbnail,
+                  {
+                    backgroundColor: activeListItem
+                      ? color.ACTIVE_BG
+                      : color.FONT_LIGHT,
+                  },
+                ]}
+              >
                 <Text style={styles.thumbnailText}>
                   {activeListItem
                     ? renderPlayPauseIcon(isPlaying)

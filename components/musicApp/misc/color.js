@@ -5,6 +5,7 @@ export default {
     FONT_MEDIUM: "black",
     FONT_LIGHT: "black",
     MODAL_BG: "rgba(0, 0, 0, 0.2)",
+    MODAL_INPUT: "rgba(0,0,0, 0.1)",
     ACTIVE_BG: "#BA181B",
     ACTIVE_FONT: "black",
     MODAL_FONT: "black",
